@@ -20,28 +20,40 @@ var pool  = mysql.createPool({
 });
 
 app.post("/dolgozat", (req, res) => {
-    let table = "dolgozatok";
     let body = req.body;
     pool.query(`INSERT INTO dolgozatok VALUES (null, '${body.nev}', '${body.dolgozat}', '${body.leiras}', '${body.datum}', '${body.konzulensnev}', ${body.ertekeles})`, (err, results) => {
         handleError(err);
-        sendResults(req, res, results, results.affectedRows, table, "record(s) inserted into");
+        sendResults(req, res, results, results.affectedRows, "dolgozatok", "record(s) inserted into");
     });
 });
 
 app.get("/dolgozat", (req, res) => {
-    
+    pool.query(`SELECT * FROM dolgozatok`, (err , results) => {
+        handleError(err);
+        sendResults(req, res, results, results.length, "dolgozatok", "record(s) sent from");
+    });
 });
 
 app.get("/dolgozat/:id", (req, res) => {
-    
+    pool.query(`SELECT * FROM dolgozatok WHERE ID = ${req.params.id}`, (err , results) => {
+        handleError(err);
+        sendResults(req, res, results, results.length, "dolgozatok", "record(s) sent from");
+    });
 });
 
 app.patch("/dolgozat/:id", (req, res) => {
-    
+    let body = req.body;
+    pool.query(`UPDATE dolgozatok SET nev = '${body.nev}', zarodolgozatcim = '${body.dolgozat}', rovidleiras = '${body.leiras}', leadasidatum = '${body.datum}', konzulensnev = '${body.konzulensnev}', ertekeles = ${body.ertekeles} WHERE ID = ${req.params.id}`, (err , results) => {
+        handleError(err);
+        sendResults(req, res, results, results.affectedRows, "dolgozatok", "record(s) updated in");
+    });
 });
 
 app.delete("/dolgozat/:id", (req, res) => {
-    
+    pool.query(`DELETE FROM dolgozatok WHERE ID = ${req.params.id}`, (err , results) => {
+        handleError(err);
+        sendResults(req, res, results, results.affectedRows, "dolgozatok", "record(s) deleted from");
+    });
 });
 
 app.listen(port, () => {
