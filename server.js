@@ -22,9 +22,9 @@ var pool  = mysql.createPool({
 app.post("/dolgozat", (req, res) => {
     let table = "dolgozatok";
     let body = req.body;
-    pool.query(`INSERT INTO dolgozatok VALUES (null, '${body.nev}', '${body.dolgozatnev}', '${body.leiras}', '${body.datum}', '${body.konzulensnev}', ${body.ertekeles})`, (err, results) => {
+    pool.query(`INSERT INTO dolgozatok VALUES (null, '${body.nev}', '${body.dolgozat}', '${body.leiras}', '${body.datum}', '${body.konzulensnev}', ${body.ertekeles})`, (err, results) => {
         handleError(err);
-        sendResults(req, res, results, 1, table, "record inserted into");
+        sendResults(req, res, results, results.affectedRows, table, "record(s) inserted into");
     });
 });
 
